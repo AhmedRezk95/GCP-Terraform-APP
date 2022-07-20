@@ -9,6 +9,6 @@ resource "google_compute_firewall" "rizk-firewall" {
   # set source tag "inbound traffic"
   # we will set target tag to specify which machine should this firewall use
   # we will mention the same tag in our vm as tags
-  target_tags = [ "ssh" ]
-
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["ssh"]
 }

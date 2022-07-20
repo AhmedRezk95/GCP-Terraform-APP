@@ -1,9 +1,3 @@
-# create serviceaccount which has gke access from vm 
-resource "google_service_account" "gke-service-account" {
-  account_id   = "gke-service-account-id"
-  display_name = "gke-service-account"
-}
-
 resource "google_compute_instance" "bastion-vm" {
   name         = "bastion-vm"
   machine_type = "n1-standard-1"
@@ -36,7 +30,7 @@ resource "google_compute_instance" "bastion-vm" {
     # set the service-account that i created before
     #email  = "terraform-service-account@ahmed-rizk.iam.gserviceaccount.com"
 
-    email = google_service_account.gke-service-account.email
+    email = google_service_account.k8s-service-account.email
     # set permission to gke
     scopes = ["cloud-platform"]
   }
