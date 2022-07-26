@@ -1,7 +1,7 @@
 resource "google_compute_instance" "bastion-vm" {
   name         = "bastion-vm"
-  machine_type = "n1-standard-1"
-  zone         = "us-east1-b"
+  machine_type = var.machine_type
+  zone         = var.machine_zone
 
   # vpc tags
   # based on firewall.tf we set there target_tags = ["ssh"]
@@ -10,7 +10,7 @@ resource "google_compute_instance" "bastion-vm" {
 
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-11"
+      image = var.machine_image
     }
   }
 
@@ -22,7 +22,7 @@ resource "google_compute_instance" "bastion-vm" {
   network_interface {
     # set your subnet 
     # omit access_config to confirm its private vm
-    subnetwork = google_compute_subnetwork.management-subnet.name
+    subnetwork = module.network.management_subnet_name
   }
 
   service_account {
@@ -30,8 +30,10 @@ resource "google_compute_instance" "bastion-vm" {
     # set the service-account that i created before
     #email  = "terraform-service-account@ahmed-rizk.iam.gserviceaccount.com"
 
-    email = google_service_account.k8s-service-account.email
+    email = module.serviceaccount.serviceaccount_email
     # set permission to gke
     scopes = ["cloud-platform"]
   }
+  
+  metadata_startup_script = file("./configuration.sh")
 }

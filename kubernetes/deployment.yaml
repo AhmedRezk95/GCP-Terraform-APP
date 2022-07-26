@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deploy
+  labels:
+    app: my-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: app-container
+        image: us.gcr.io/ahmed-rizk/project-gcp@sha256:71511cb2f66b09153d6c9a0d399831b16f59113b5bceb8b6bbac7edfa7979ba9
+        ports:
+        - containerPort: 8000
